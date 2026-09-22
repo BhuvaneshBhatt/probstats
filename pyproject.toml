@@ -30,7 +30,7 @@ Repository = "https://github.com/BhuvaneshBhatt/probstats"
 Issues = "https://github.com/BhuvaneshBhatt/probstats/issues"
 
 [project.optional-dependencies]
-test = ["pytest>=8", "pytest-cov>=5", "hypothesis>=6", "scipy>=1.10", "exprtest>=0.1.0", "multiple-integrate>=2.1.0", "semialg>=1.2.0", "tensoratlas>=0.2.0", "funcprops>=0.2.0"]
+test = ["pytest>=8", "pytest-cov>=5", "hypothesis>=6", "scipy>=1.10", "exprtest>=0.1.0", "multiple-integrate>=2.1.0", "semialg>=1.2.0", "tensoratlas>=0.2.0", "funcprops>=0.2.0", "pandas"]
 dev = ["pytest>=8", "pytest-cov>=5", "hypothesis>=6", "ruff>=0.6", "scipy>=1.10", "exprtest>=0.1.0", "multiple-integrate>=2.1.0", "semialg>=1.2.0", "tensoratlas>=0.2.0", "funcprops>=0.2.0"]
 laplace = ["scipy>=1.10"]
 symbopt = ["symbopt>=0.1.0"]
