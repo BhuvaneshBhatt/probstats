@@ -80,7 +80,9 @@ def test_observation_prediction_adds_noise_variance():
 
 
 def test_nonzero_mean_function_is_conditioned_correctly():
-    mean = lambda points: np.asarray(points)[:, 0] + 10.0
+    def mean(points):
+        return np.asarray(points)[:, 0] + 10.0
+
     fit = GaussianProcessRegressor(
         RBFKernel(length_scale=1.0), noise_variance=0.1, mean_function=mean, jitter=0.0
     ).fit([[0.0], [1.0]], [10.0, 11.0])
@@ -149,7 +151,9 @@ def test_invalid_shapes_and_singular_covariance_fail_cleanly():
 
 
 def test_input_dependent_nugget_matches_diagonal_noise_semantics():
-    nugget = lambda points: 0.1 + 0.2 * np.asarray(points)[:, 0] ** 2
+    def nugget(points):
+        return 0.1 + 0.2 * np.asarray(points)[:, 0] ** 2
+
     fit = GaussianProcessRegressor(RBFKernel(), noise_variance=nugget, jitter=0.0).fit(
         [[0.0], [1.0]], [0.0, 1.0]
     )

@@ -1,8 +1,10 @@
 import ast
+import difflib
 import importlib
 import re
 from pathlib import Path
-import difflib
+
+import pytest
 
 ROOT = Path(__file__).parents[1]
 DOCS = (ROOT / "README.md", *sorted((ROOT / "docs").rglob("*.md")))
@@ -65,22 +67,13 @@ def test_generated_api_reference_is_current(tmp_path):
 
     api_path = ROOT / "docs" / "api-reference.md"
     capability_path = ROOT / "docs" / "distribution-capabilities.md"
-#    before = (api_path.read_text(), capability_path.read_text())
-    subprocess.run(
-        [sys.executable, str(ROOT / "tools" / "generate_api_reference.py")],
-        cwd=ROOT,
-        check=True,
-    )
-
     api_before = api_path.read_text()
     capability_before = capability_path.read_text()
-
     subprocess.run(
         [sys.executable, str(ROOT / "tools" / "generate_api_reference.py")],
         cwd=ROOT,
         check=True,
     )
-
     api_after = api_path.read_text()
     capability_after = capability_path.read_text()
 
@@ -105,6 +98,3 @@ def test_generated_api_reference_is_current(tmp_path):
             )
         )
         pytest.fail(f"Generated distribution capabilities are stale:\n{diff}")
-
-#    after = (api_path.read_text(), capability_path.read_text())
-#    assert after == before

@@ -282,12 +282,12 @@ class LKJCholesky(Distribution):
 
     @scalar_batch
     def logpdf(self, value):
-        l = _matrix(value, name="value")
-        if l.shape != (self.dimension, self.dimension):
+        chol = _matrix(value, name="value")
+        if chol.shape != (self.dimension, self.dimension):
             raise ValueError("Cholesky factor has wrong shape")
         powers = sp.Add(
             *(
-                (self.dimension - (i + 1) + 2 * self.eta - 2) * sp.log(l[i, i])
+                (self.dimension - (i + 1) + 2 * self.eta - 2) * sp.log(chol[i, i])
                 for i in range(1, self.dimension)
             )
         )

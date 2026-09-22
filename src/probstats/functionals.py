@@ -1,4 +1,4 @@
-"""Generic probability/statistics functionals and exact solver dispatch."""
+"""Generic probability/statistics functionals and exact-first solver dispatch."""
 
 from __future__ import annotations
 

@@ -114,7 +114,7 @@ def plugin_bandwidth(data: Any, weights: Any | None = None) -> float:
     """One-stage Gaussian plug-in bandwidth using a pilot curvature estimate.
 
     The pilot is Silverman's bandwidth.  ``R(f'')`` is estimated exactly for
-    the Gaussian pilot mixture using the 4th derivative of the convolution
+    the Gaussian pilot mixture using the fourth derivative of the convolution
     kernel, then inserted into the AMISE-optimal Gaussian-kernel bandwidth.
     """
     data, weights = _data_and_weights(data, weights)

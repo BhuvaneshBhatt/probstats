@@ -57,7 +57,9 @@ def test_metropolis_chain_is_resumable_and_state_counters_continue():
 
 
 def test_independent_metropolis_corrects_for_proposal_density():
-    logq = lambda x: -0.5 * float(np.dot(x, x)) / 4 - 0.5 * math.log(8 * math.pi)
+    def logq(x):
+        return -0.5 * float(np.dot(x, x)) / 4 - 0.5 * math.log(8 * math.pi)
+
     sampler = IndependentMetropolis(lambda rng: np.array([rng.normal(scale=2.0)]), logq)
     chain = sample_mcmc(
         std_normal_logp, [0.0], sampler=sampler, draws=1200, warmup=200, rng=11
@@ -96,7 +98,10 @@ def test_transformed_metropolis_includes_jacobian():
 def test_adaptive_metropolis_learns_covariance_on_correlated_gaussian():
     cov = np.array([[1.0, 0.8], [0.8, 1.5]])
     precision = np.linalg.inv(cov)
-    logp = lambda x: -0.5 * float(x @ precision @ x)
+
+    def logp(x):
+        return -0.5 * float(x @ precision @ x)
+
     chain = sample_mcmc(
         logp,
         [2.0, -2.0],
@@ -251,7 +256,9 @@ def test_nested_mcmc_constrained_sampler_preserves_unit_cube_prior():
 
 
 def test_chain_and_state_arrays_are_immutable():
-    logp = lambda x: -0.5 * float(np.dot(x, x))
+    def logp(x):
+        return -0.5 * float(np.dot(x, x))
+
     chain = sample_mcmc(
         logp, [0.0], sampler=MetropolisHastings(0.2), draws=4, warmup=0, rng=3
     )

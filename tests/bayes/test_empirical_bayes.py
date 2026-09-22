@@ -43,7 +43,9 @@ def test_hyperparameter_bounds_and_optimizer_options_are_validated():
     with pytest.raises(ValueError, match="finite"):
         Hyperparameter("x", 1.0, bounds=(0.0, math.inf))
 
-    objective = lambda params: -(params["x"] ** 2)
+    def objective(params):
+        return -(params["x"] ** 2)
+
     with pytest.raises(ValueError, match="tolerance"):
         optimize_evidence(
             objective,

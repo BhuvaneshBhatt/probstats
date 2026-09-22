@@ -425,14 +425,14 @@ class CorrelationCholeskyTransform:
         return sp.ImmutableMatrix(out)
 
     def invert(self, value):
-        l = sp.ImmutableMatrix(value)
-        if l.shape != (self.dimension, self.dimension):
+        chol = sp.ImmutableMatrix(value)
+        if chol.shape != (self.dimension, self.dimension):
             raise ValueError("Cholesky factor has wrong shape")
         ys = []
         for i in range(1, self.dimension):
             remaining = sp.S.One
             for j in range(i):
-                z = sp.simplify(l[i, j] / sp.sqrt(remaining))
+                z = sp.simplify(chol[i, j] / sp.sqrt(remaining))
                 ys.append(sp.atanh(z))
                 remaining = sp.simplify(remaining * (1 - z**2))
         return sp.ImmutableMatrix(ys)
@@ -459,14 +459,14 @@ class CorrelationCholeskyTransform:
     def invert_numeric(self, value):
         import numpy as np
 
-        l = np.asarray(value, dtype=float)
-        if l.shape != (self.dimension, self.dimension):
+        chol = np.asarray(value, dtype=float)
+        if chol.shape != (self.dimension, self.dimension):
             raise ValueError("Cholesky factor has wrong shape")
         ys = []
         for i in range(1, self.dimension):
             remaining = 1.0
             for j in range(i):
-                z = l[i, j] / np.sqrt(remaining)
+                z = chol[i, j] / np.sqrt(remaining)
                 z = np.clip(z, -1 + 1e-15, 1 - 1e-15)
                 ys.append(np.arctanh(z))
                 remaining *= 1.0 - z * z
@@ -516,8 +516,8 @@ class CorrelationMatrixTransform:
         return CorrelationMatrixSpace(self.dimension)
 
     def apply(self, value):
-        l = self.cholesky_transform.apply(value)
-        return sp.simplify(l * l.T)
+        chol = self.cholesky_transform.apply(value)
+        return sp.simplify(chol * chol.T)
 
     def invert(self, value):
         r = sp.ImmutableMatrix(value)
@@ -526,8 +526,8 @@ class CorrelationMatrixTransform:
         return self.cholesky_transform.invert(r.cholesky())
 
     def apply_numeric(self, value):
-        l = self.cholesky_transform.apply_numeric(value)
-        return l @ l.T
+        chol = self.cholesky_transform.apply_numeric(value)
+        return chol @ chol.T
 
     def invert_numeric(self, value):
         import numpy as np
@@ -537,13 +537,13 @@ class CorrelationMatrixTransform:
 
     def log_abs_det_jacobian(self, value):
         ys = tuple(map(sp.sympify, value))
-        l = self.cholesky_transform.apply(ys)
+        chol = self.cholesky_transform.apply(ys)
         extra = sp.S.Zero
         # Row-wise L -> R mapping is triangular; each new correlation row
         # contributes the determinant of the preceding Cholesky block.
         for i in range(1, self.dimension):
             for k in range(1, i):
-                extra += sp.log(l[k, k])
+                extra += sp.log(chol[k, k])
         return sp.simplify(self.cholesky_transform.log_abs_det_jacobian(ys) + extra)
 
 
@@ -581,8 +581,8 @@ def invert_transform(
 
     Finite inverse sets become branch-aware transforms automatically.  The
     codomain is inferred with SymPy's ``function_range`` when possible.  This
-    is exact-first: unresolved/implicit inverse sets raise
-    ``NotImplementedError`` rather than inventing a local inverse.
+    is exact: unresolved/implicit inverse sets raise  ``NotImplementedError``
+    rather than inventing a local inverse.
     """
     from sympy.calculus.util import function_range
 

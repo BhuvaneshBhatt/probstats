@@ -85,8 +85,8 @@ def _cox_terms(beta, data, x, ties):
         e0 = float(np.sum(we))
         e1 = np.sum(we[:, None] * xe, axis=0)
         e2 = np.einsum("i,ij,ik->jk", we, xe, xe)
-        for l in range(d):
-            fraction = l / d
+        for tie_index in range(d):
+            fraction = tie_index / d
             denominator = s0 - fraction * e0
             first = s1 - fraction * e1
             second = s2 - fraction * e2
@@ -338,8 +338,8 @@ def schoenfeld_residuals(result: CoxPHResult):
             e1 = np.sum(event_weights[:, None] * x[event_indices], axis=0)
             expected = np.zeros(x.shape[1])
             d = event_indices.size
-            for l in range(d):
-                fraction = l / d
+            for tie_index in range(d):
+                fraction = tie_index / d
                 expected += (s1 - fraction * e1) / (s0 - fraction * e0)
             expected /= d
         else:
@@ -669,7 +669,10 @@ def parametric_survival_regression(
         initial = np.asarray(initial, dtype=float).reshape(-1)
     if initial.size != size or not np.all(np.isfinite(initial)):
         raise ValueError(f"initial must contain {size} finite parameters")
-    objective = lambda theta: _aft_loglik(theta, family, data, x)
+
+    def objective(theta):
+        return _aft_loglik(theta, family, data, x)
+
     estimates, loglik, converged, iterations = _bfgs_maximize(
         objective, initial, int(max_iter), float(tol)
     )

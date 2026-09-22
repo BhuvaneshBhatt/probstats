@@ -50,15 +50,15 @@ def test_lkj_eta_one_dimension_two_is_uniform_correlation():
 
 def test_lkj_cholesky_density_matches_dimension_two_parameterization():
     eta, rho = sp.symbols("eta rho", positive=True)
-    l = sp.ImmutableMatrix([[1, 0], [rho, sp.sqrt(1 - rho**2)]])
+    chol = sp.ImmutableMatrix([[1, 0], [rho, sp.sqrt(1 - rho**2)]])
     d = LKJCholesky(2, eta)
     expected = (eta - 1) * sp.log(1 - rho**2) - sp.log(sp.beta(sp.Rational(1, 2), eta))
-    assert sp.simplify(d.logpdf(l) - expected) == 0
+    assert sp.simplify(d.logpdf(chol) - expected) == 0
 
 
 def test_correlation_cholesky_space_membership():
-    l = sp.ImmutableMatrix([[1, 0], [sp.Rational(3, 5), sp.Rational(4, 5)]])
-    assert sp.simplify(CorrelationCholeskySpace(2).contains(l)) is sp.true
+    chol = sp.ImmutableMatrix([[1, 0], [sp.Rational(3, 5), sp.Rational(4, 5)]])
+    assert sp.simplify(CorrelationCholeskySpace(2).contains(chol)) is sp.true
     bad = sp.ImmutableMatrix([[1, 1], [0, 1]])
     assert sp.simplify(CorrelationCholeskySpace(2).contains(bad)) is sp.false
 
@@ -66,10 +66,10 @@ def test_correlation_cholesky_space_membership():
 def test_correlation_transforms_symbolic_dimension_two():
     y = sp.symbols("y", real=True)
     ct = CorrelationCholeskyTransform(2)
-    l = ct.apply([y])
-    assert l[1, 0] == sp.tanh(y)
-    assert sp.simplify(l[1, 1] ** 2 - (1 - sp.tanh(y) ** 2)) == 0
-    assert sp.simplify(ct.invert(l)[0] - sp.atanh(sp.tanh(y))) == 0
+    chol = ct.apply([y])
+    assert chol[1, 0] == sp.tanh(y)
+    assert sp.simplify(chol[1, 1] ** 2 - (1 - sp.tanh(y) ** 2)) == 0
+    assert sp.simplify(ct.invert(chol)[0] - sp.atanh(sp.tanh(y))) == 0
 
     rt = CorrelationMatrixTransform(2)
     r = rt.apply([y])

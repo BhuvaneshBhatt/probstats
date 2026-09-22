@@ -409,8 +409,8 @@ def network_regularization_loss(
         if len(lambdas) != len(powers):
             raise ValueError("lambda_ and p sequences must have the same length")
         return sum(
-            network_regularization_loss(params, l, power)
-            for l, power in zip(lambdas, powers)
+            network_regularization_loss(params, coefficient, power)
+            for coefficient, power in zip(lambdas, powers)
         )
     power = float(p)
     coefficient = float(lambda_)

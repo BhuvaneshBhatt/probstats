@@ -59,7 +59,10 @@ def variance_ratio_test(x, y, alternative="two-sided"):
             statistic, pvalue = math.inf, 0.0
     else:
         statistic = v1 / v2
-        cdf = lambda z: f_cdf(z, a.size - 1, b.size - 1)
+
+        def cdf(z):
+            return f_cdf(z, a.size - 1, b.size - 1)
+
         pvalue = _tail(cdf, statistic, alternative)
     return HypothesisTestResult(
         statistic,

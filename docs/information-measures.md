@@ -1,6 +1,6 @@
 # Information measures
 
-`probstats` provides exact-first information-theoretic measures in the general
+`probstats` provides exact information-theoretic measures in the general
 probability layer. They work with `Distribution` objects and use the same
 symbolic-first philosophy as the rest of the package.
 

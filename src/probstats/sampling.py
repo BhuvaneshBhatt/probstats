@@ -267,21 +267,21 @@ def sample(
         eta = _float(distribution.eta, name="eta")
 
         def one_lkj_cholesky():
-            l = np.zeros((d, d), dtype=float)
-            l[0, 0] = 1.0
+            chol = np.zeros((d, d), dtype=float)
+            chol[0, 0] = 1.0
             for i in range(1, d):
                 remaining = 1.0
                 for j in range(i):
                     alpha = eta + 0.5 * (d - (j + 1) - 1)
                     z = 2.0 * r.beta(alpha, alpha) - 1.0
-                    l[i, j] = z * np.sqrt(remaining)
+                    chol[i, j] = z * np.sqrt(remaining)
                     remaining *= 1.0 - z * z
-                l[i, i] = np.sqrt(max(remaining, 0.0))
-            return l
+                chol[i, i] = np.sqrt(max(remaining, 0.0))
+            return chol
 
         def one_lkj():
-            l = one_lkj_cholesky()
-            return l if isinstance(distribution, LKJCholesky) else l @ l.T
+            chol = one_lkj_cholesky()
+            return chol if isinstance(distribution, LKJCholesky) else chol @ chol.T
 
         if not shape:
             return one_lkj()

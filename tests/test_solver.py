@@ -112,7 +112,10 @@ def test_numerical_probability_is_opt_in_and_reports_error():
 def test_numerical_expectation_reproducible():
     # Force MC by using a vector law without structural variables.
     d = IndependentDistribution(Normal(0, 1), 2)
-    f = lambda draws: np.asarray(draws)[:, 0] ** 2
+
+    def f(draws):
+        return np.asarray(draws)[:, 0] ** 2
+
     a = expectation(
         d, f, numerical_fallback=True, samples=5000, rng=77, return_result=True
     )

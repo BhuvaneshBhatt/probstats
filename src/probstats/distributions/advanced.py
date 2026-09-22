@@ -638,7 +638,10 @@ class InverseGaussian(Distribution):
     def _cdf(self, x):
         z1 = sp.sqrt(self.shape / x) * (x / self.mean - 1)
         z2 = -sp.sqrt(self.shape / x) * (x / self.mean + 1)
-        phi = lambda z: (1 + sp.erf(z / sp.sqrt(2))) / 2
+
+        def phi(z):
+            return (1 + sp.erf(z / sp.sqrt(2))) / 2
+
         expr = phi(z1) + sp.exp(2 * self.shape / self.mean) * phi(z2)
         return sp.Piecewise((0, x <= 0), (expr, True))
 

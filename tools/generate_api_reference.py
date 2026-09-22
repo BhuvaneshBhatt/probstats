@@ -6,7 +6,6 @@ import inspect
 import re
 from pathlib import Path
 import enum
-import inspect
 import probstats
 
 ROOT = Path(__file__).resolve().parents[1]

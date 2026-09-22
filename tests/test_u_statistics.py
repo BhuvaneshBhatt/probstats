@@ -49,7 +49,10 @@ def test_incomplete_fixed_budget_is_reproducible():
 
 def test_bernoulli_budget_equal_to_all_subsets_matches_complete_statistic():
     sample = [1, 2, 3, 4]
-    kernel = lambda x, y: (x - y) ** 2
+
+    def kernel(x, y):
+        return (x - y) ** 2
+
     complete = u_statistic(sample, kernel, order=2)
     incomplete = incomplete_u_statistic(
         sample, kernel, order=2, budget=6, rng=7, return_result=True

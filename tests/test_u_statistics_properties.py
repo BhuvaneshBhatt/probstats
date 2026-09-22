@@ -54,7 +54,10 @@ def test_fixed_budget_full_enumeration_matches_complete():
     sample = tuple(range(6))
     order = 3
     budget = comb(len(sample), order)
-    kernel = lambda *xs: sum(x * x for x in xs)
+
+    def kernel(*xs):
+        return sum(x * x for x in xs)
+
     result = incomplete_u_statistic(
         sample,
         kernel,

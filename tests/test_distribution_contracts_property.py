@@ -7,7 +7,7 @@ import math
 import numpy as np
 import pytest
 
-hypothesis = pytest.importorskip("hypothesis")
+pytest.importorskip("hypothesis")
 from hypothesis import given, settings
 from hypothesis import strategies as st
 

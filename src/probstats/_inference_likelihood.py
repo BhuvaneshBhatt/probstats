@@ -381,7 +381,9 @@ def _auto_unconstrained_minimize(
 def numerical_mle(
     lik, initial, *, bounds=None, constraints=None, max_iter=500, tol=1e-8
 ):
-    objective = lambda z: -lik.log_likelihood(z)
+    def objective(z):
+        return -lik.log_likelihood(z)
+
     use_auto = constraints == "auto" or (constraints is None and bounds is None)
     if use_auto:
         try:
