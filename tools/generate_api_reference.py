@@ -5,7 +5,8 @@ from __future__ import annotations
 import inspect
 import re
 from pathlib import Path
-
+import enum
+import inspect
 import probstats
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -82,6 +83,8 @@ WRAPPER_DISTRIBUTIONS = {
 
 
 def signature(obj):
+    if inspect.isclass(obj) and issubclass(obj, enum.Enum):
+        return ""
     try:
         text = str(inspect.signature(obj))
         return re.sub(r"0x[0-9a-fA-F]+", "0x…", text)

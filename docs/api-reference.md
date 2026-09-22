@@ -270,7 +270,7 @@ This file is generated from each namespace's `__all__`. Run `python tools/genera
 | `Factor` | class | `(target: 'Variable', distribution: 'Distribution \| None' = None, log_density: 'sp.Expr \| None' = None, name: 'str \| None' = None) -> None` | A probability factor associated with a target variable. |
 | `GaussianProcessFit` | class | `(x_train: 'np.ndarray', y_train: 'np.ndarray', kernel: 'KernelBase', noise_variance: 'NoiseFunction \| float', mean_function: 'MeanFunction \| float \| None', covariance: 'np.ndarray', cholesky: 'np.ndarray', alpha: 'np.ndarray', log_evidence: 'float', jitter: 'float') -> None` | A fitted GP with cached Cholesky factorization. |
 | `GaussianProcessRegressor` | class | `(kernel: 'KernelBase \| Callable[[np.ndarray, np.ndarray], float]', *, noise_variance: 'NoiseFunction \| float' = 0.0, mean_function: 'MeanFunction \| float \| None' = None, jitter: 'float' = 1e-10) -> 'None'` | Exact GP regression for a fixed covariance kernel and Gaussian observation noise. |
-| `InferenceKind` | class | `(value, names=None, *, module=None, qualname=None, type=None, start=1, boundary=None)` | str(object='') -> str |
+| `InferenceKind` | class | `` | str(object='') -> str |
 | `InferencePlan` | class | `(candidates: 'tuple[CandidateAssessment, ...]') -> None` | InferencePlan(candidates: 'tuple[CandidateAssessment, ...]') |
 | `InferenceResult` | class | `(posterior: 'Any', kind: 'InferenceKind', log_evidence: 'Any \| None' = None, steps: 'tuple[InferenceStep, ...]' = (), diagnostics: 'Mapping[str, Any]' = <factory>, metadata: 'Mapping[str, Any]' = <factory>) -> None` | Backend-independent result container. |
 | `Model` | class | `(variables: 'tuple[Variable, ...]', factors: 'tuple[Factor, ...]' = (), observations: 'Mapping[str, Any]' = <factory>, name: 'str \| None' = None) -> None` | Immutable probabilistic model. |
@@ -410,9 +410,9 @@ This file is generated from each namespace's `__all__`. Run `python tools/genera
 | Name | Kind | Signature | Summary |
 | --- | --- | --- | --- |
 | `InformationMeasureError` | class | `` | Raised when an information measure cannot be evaluated safely. |
-| `InformationMethod` | class | `(value, names=None, *, module=None, qualname=None, type=None, start=1, boundary=None)` | str(object='') -> str |
+| `InformationMethod` | class | `` | str(object='') -> str |
 | `InformationResult` | class | `(value: 'Any', method: 'InformationMethod', support_relation: 'SupportRelation' = <SupportRelation.PROVEN: 'proven'>, exact: 'bool' = True) -> None` | InformationResult(value: 'Any', method: 'InformationMethod', support_relation: 'SupportRelation' = <SupportRelation.PROVEN: 'proven'>, exact: 'bool' = True) |
-| `SupportRelation` | class | `(value, names=None, *, module=None, qualname=None, type=None, start=1, boundary=None)` | str(object='') -> str |
+| `SupportRelation` | class | `` | str(object='') -> str |
 | `bhattacharyya_coefficient` | function | `(p: 'object', q: 'object', *, numerical_fallback: 'bool' = False, samples: 'int' = 100000, rng=None, return_result: 'bool' = False)` | Return the Bhattacharyya coefficient ``∫ sqrt(p q)``. |
 | `bhattacharyya_distance` | function | `(p: 'Distribution', q: 'Distribution', **kwargs)` | Return ``-log`` of the Bhattacharyya coefficient. |
 | `cross_entropy` | function | `(p: 'object', q: 'object', *, numerical_fallback: 'bool' = False, samples: 'int' = 100000, rng=None, return_result: 'bool' = False)` | Return the cross-entropy ``H(p, q) = -E_p[log q(X)]``. |
