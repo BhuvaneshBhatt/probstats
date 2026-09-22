@@ -59,7 +59,7 @@ This file is generated from each namespace's `__all__`. Run `python tools/genera
 | `finite_mean` | function | `(variable, *, assumptions=None)` | Construct or query finiteness of the first moment. |
 | `finite_moment` | function | `(variable, order, *, assumptions=None)` | Construct or query finiteness of a raw moment. |
 | `finite_variance` | function | `(variable, *, assumptions=None)` | Construct or query finiteness of the second moment. |
-| `functionals` | module | `` | Generic probability/statistics functionals and exact solver dispatch. |
+| `functionals` | module | `` | Generic probability/statistics functionals and exact-first solver dispatch. |
 | `identically_distributed` | function | `(*variables, assumptions=None)` | Construct or query equality in distribution for a collection. |
 | `iid` | function | `(*variables, assumptions=None)` | Construct or query an independent-and-identically-distributed relation. |
 | `inclusion_exclusion` | function | `(dist, *events, variable=None)` | Return the finite inclusion-exclusion probability of an event union. |
@@ -77,7 +77,7 @@ This file is generated from each namespace's `__all__`. Run `python tools/genera
 | `mutual_information_chain_rule` | function | `(left, *right, assumptions=None)` | Return ``I(X;Y1)+I(X;Y2\|Y1)+...`` as a symbolic chain rule. |
 | `mutually_independent` | function | `(*variables, assumptions=None)` | Construct or query mutual independence for a collection. |
 | `pairwise_independent` | function | `(*variables, assumptions=None)` | Construct or query pairwise independence for a collection. |
-| `probability` | function | `(dist, event, *, variable=None, numerical_fallback: 'bool' = False, samples: 'int' = 100000, rng=None, return_result: 'bool' = False)` | Compute ``P(event)`` under ``dist`` using exact dispatch. |
+| `probability` | function | `(dist, event, *, variable=None, numerical_fallback: 'bool' = False, samples: 'int' = 100000, rng=None, return_result: 'bool' = False)` | Compute ``P(event)`` under ``dist`` using exact-first dispatch. |
 | `probability_generating_function` | function | `(expr, z=None, *, assumptions=None)` | Return the PGF of a distribution or symbolic random expression. |
 | `product_kl_divergence` | function | `(pairs, **kwargs)` | Apply KL additivity to a finite product of independent component laws. |
 | `pseudo_covariance` | function | `(left, right=None, *, assumptions=None)` | Normalize pseudo-covariance for complex-valued random expressions. |
