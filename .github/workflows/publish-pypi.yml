@@ -1,0 +1,57 @@
+name: publish-pypi
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build distributions
+        run: |
+          python -m pip install --upgrade build twine
+          python -m build
+          python -m twine check dist/*
+      - name: Smoke-test wheel
+        run: |
+          python -m venv smoke-env
+          smoke-env/bin/python -m pip install --upgrade pip
+          smoke-env/bin/python -m pip install dist/*.whl
+          smoke-env/bin/python - <<'PY'
+          import probstats
+          from probstats import Normal, mean, quantile
+
+          assert probstats.__version__
+          assert mean([1, 2, 3]) == 2.0
+          assert mean(Normal(0, 1)) == 0
+          assert quantile(Normal(0, 1), 0.5) == 0
+          print("wheel smoke test passed")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/probstats
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

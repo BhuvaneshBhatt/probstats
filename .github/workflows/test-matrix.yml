@@ -1,0 +1,35 @@
+name: test-matrix
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        extras: [base, tabular, laplace, exact, reasoning, jax, all]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -U pip
+      - name: Install
+        shell: bash
+        run: |
+          case "${{ matrix.extras }}" in
+            base) pip install -e '.[test]' ;;
+            all) pip install -e '.[test,tabular,laplace,exact,reasoning,jax]' ;;
+            *) pip install -e ".[test,${{ matrix.extras }}]" ;;
+          esac
+      - run: pytest -q
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -U pip
+      - run: pip install -e '.[dev]'
+      - run: ruff check src tests tools
+      - run: ruff format --check src tests tools
+      - run: python -m compileall -q src tests tools
