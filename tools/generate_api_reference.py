@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import enum
 import inspect
 import re
 from pathlib import Path
-import enum
+
 import probstats
 
 ROOT = Path(__file__).resolve().parents[1]
