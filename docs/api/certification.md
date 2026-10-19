@@ -1,34 +1,34 @@
 # Expression certification API
 
-`probstats.bayes` uses the `exprtest` package as a proof-oriented
+`probstats.bayes` uses the `exprtools` package as a proof-oriented
 zero/nonzero oracle. Certification is tri-state: heuristic or
 probable evidence is never promoted to a proof.
 
-`exprtest` is a core dependency because symbolic equality and zero decisions across
+`exprtools` is a core dependency because symbolic equality and zero decisions across
 the package use the same certification boundary. The `certify` extra adds the
 semialgebraic reasoning backend used by higher-level certification features.
 
 ## `certify_zero`
 
 ```text
-certify_zero(expr, *, use_exprtest=True)
+certify_zero(expr, *, use_exprtools=True)
 ```
 
-Attempts to prove that `expr` is zero or nonzero. `exprtest` is a core dependency;
+Attempts to prove that `expr` is zero or nonzero. `exprtools` is a core dependency;
 `probstats.bayes` calls:
 
 ```python
-exprtest.zerotest(expr, confidence="certified")
+exprtools.zerotest(expr, confidence="certified")
 ```
 
-so `False` means *proved nonzero*. The default exprtest `"probable"` mode is
-not used for mathematical certification. If exprtest returns `None`, native
+so `False` means *proved nonzero*. The default exprtools `"probable"` mode is
+not used for mathematical certification. If exprtools returns `None`, native
 SymPy exact zero predicates are tried; unresolved cases remain `UNKNOWN`.
 
 ## `certify_equal`
 
 ```text
-certify_equal(left, right, *, use_exprtest=True)
+certify_equal(left, right, *, use_exprtools=True)
 ```
 
 Certifies equality by applying `certify_zero(left - right)`.
@@ -40,7 +40,7 @@ Immutable result containing:
 - `expression`: simplified expression tested;
 - `status`: `ZERO`, `NONZERO`, or `UNKNOWN`;
 - `proven`: whether the conclusion is a proof;
-- `backend`: `"exprtest"` or fallback `"sympy"`;
+- `backend`: `"exprtools"` or fallback `"sympy"`;
 - `method` and `reason`: audit metadata;
 - `raw`: optional backend result.
 
@@ -88,3 +88,14 @@ normalizer has independently certified nonzeroness; Laplace quality reports
 whether precision singularity/nonsingularity was certified. These certificates
 are supporting evidence only: they do not turn a local Laplace approximation
 into a globally exact posterior.
+
+## Compatibility with exprtest
+
+The default backend is now `exprtools`. `use_exprtest` remains a supported alias
+for enabling the oracle; an explicit `use_exprtools` value takes precedence.
+Both `certify_zero` and `certify_equal` accept `exprtools_loader` for injection.
+`infer_exact` and `infer_laplace` forward it to their certification boundaries.
+The existing `exprtest_loader` keyword remains supported end to end and retains
+`backend="exprtest"` metadata for explicitly injected legacy backends. Supplying
+both loader keywords raises `ValueError`. Existing tri-state decisions and
+certified confidence are preserved.

@@ -1,4 +1,4 @@
-"""Optional proof-oriented expression certification backed by exprtest."""
+"""Optional proof-oriented expression certification backed by exprtools."""
 
 from __future__ import annotations
 
@@ -52,29 +52,37 @@ class ExpressionCertificate:
 def certify_zero(
     expr: Any,
     *,
+    use_exprtools: bool | None = None,
+    exprtools_loader: Callable[[], Any] | None = None,
     use_exprtest: bool = True,
     exprtest_loader: Callable[[], Any] | None = None,
 ) -> ExpressionCertificate:
     """Try to prove that ``expr`` is zero or nonzero.
 
-    The optional :mod:`exprtest` backend is tried first when installed, using
+    The :mod:`exprtools` backend is tried first when installed, using
     ``confidence="certified"`` so a ``False`` result means *proved* nonzero
     rather than merely a strong numerical witness. Native SymPy exact
     predicates are then used as a dependency-free fallback.
+
+    ``use_exprtest`` and ``exprtest_loader`` remain compatibility keywords.
+    ``use_exprtools`` takes precedence when supplied. An explicit legacy loader
+    retains the legacy backend label; the default and new loader use exprtools.
     """
+    if exprtools_loader is not None and exprtest_loader is not None:
+        raise ValueError("Supply only one of exprtools_loader and exprtest_loader")
+    enabled = use_exprtest if use_exprtools is None else use_exprtools
+    loader = exprtools_loader if exprtools_loader is not None else exprtest_loader
+    backend = "exprtest" if exprtest_loader is not None else "exprtools"
+    backend_unknown = False
     value = sp.simplify(sp.sympify(expr))
-    if use_exprtest:
+    if enabled:
         try:
-            exprtest = (
-                import_module("exprtest")
-                if exprtest_loader is None
-                else exprtest_loader()
-            )
+            oracle = import_module("exprtools") if loader is None else loader()
         except ImportError:
             pass
         else:
             try:
-                direct = exprtest.zerotest(value, confidence="certified")
+                direct = oracle.zerotest(value, confidence="certified")
             except (
                 TypeError,
                 ValueError,
@@ -89,9 +97,9 @@ def certify_zero(
                     value,
                     CertificationStatus.ZERO,
                     True,
-                    "exprtest",
+                    backend,
                     "zerotest",
-                    "exprtest certified the expression as zero",
+                    f"{backend} certified the expression as zero",
                     direct,
                 )
             if direct is False:
@@ -99,15 +107,12 @@ def certify_zero(
                     value,
                     CertificationStatus.NONZERO,
                     True,
-                    "exprtest",
+                    backend,
                     "zerotest",
-                    "exprtest certified the expression as nonzero",
+                    f"{backend} certified the expression as nonzero",
                     direct,
                 )
-            exprtest_unknown = True
-
-    else:
-        exprtest_unknown = False
+            backend_unknown = True
 
     if value == 0 or value.is_zero is True:
         return ExpressionCertificate(
@@ -128,9 +133,9 @@ def certify_zero(
             "SymPy proved nonzero",
         )
     reason = (
-        "exprtest returned UNKNOWN and SymPy could not prove zero/nonzero"
-        if use_exprtest and "exprtest_unknown" in locals() and exprtest_unknown
-        else "Neither exprtest nor SymPy proved zero/nonzero"
+        f"{backend} returned UNKNOWN and SymPy could not prove zero/nonzero"
+        if backend_unknown
+        else f"Neither {backend} nor SymPy proved zero/nonzero"
     )
     return ExpressionCertificate(
         value, CertificationStatus.UNKNOWN, False, "sympy", "is_zero", reason
@@ -141,12 +146,16 @@ def certify_equal(
     left: Any,
     right: Any,
     *,
+    use_exprtools: bool | None = None,
+    exprtools_loader: Callable[[], Any] | None = None,
     use_exprtest: bool = True,
     exprtest_loader: Callable[[], Any] | None = None,
 ) -> ExpressionCertificate:
     """Certify equality by applying :func:`certify_zero` to ``left - right``."""
     return certify_zero(
         sp.sympify(left) - sp.sympify(right),
+        use_exprtools=use_exprtools,
+        exprtools_loader=exprtools_loader,
         use_exprtest=use_exprtest,
         exprtest_loader=exprtest_loader,
     )

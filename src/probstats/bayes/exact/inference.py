@@ -97,6 +97,7 @@ def infer_exact(
     fallback_to_conjugacy: bool = True,
     backend: str | ExactIntegrationBackend = "auto",
     assumptions: Any | None = None,
+    exprtools_loader: Callable[[], Any] | None = None,
     exprtest_loader: Callable[[], Any] | None = None,
     semialg_loader: Callable[[], Any] | None = None,
 ) -> InferenceResult:
@@ -121,6 +122,7 @@ def infer_exact(
             normalizer_validation = _validate_normalizer(
                 z,
                 assumptions=assumptions,
+                exprtools_loader=exprtools_loader,
                 exprtest_loader=exprtest_loader,
                 semialg_loader=semialg_loader,
             )

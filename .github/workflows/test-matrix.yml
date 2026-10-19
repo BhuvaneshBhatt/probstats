@@ -11,6 +11,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
+      - name: Install exprtools pending first release
+        run: python -m pip install "exprtools @ git+https://github.com/BhuvaneshBhatt/exprtest.git@b6c38bd2b5fc27d8f88e30026d52868050308e18#subdirectory=exprtools"
       - run: python -m pip install -U pip
       - name: Install
         shell: bash
@@ -28,6 +30,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
+      - name: Install exprtools pending first release
+        run: python -m pip install "exprtools @ git+https://github.com/BhuvaneshBhatt/exprtest.git@b6c38bd2b5fc27d8f88e30026d52868050308e18#subdirectory=exprtools"
       - run: python -m pip install -U pip
       - run: pip install -e '.[dev]'
       - run: ruff check src tests tools
