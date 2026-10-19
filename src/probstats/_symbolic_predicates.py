@@ -6,7 +6,7 @@ from enum import Enum
 from typing import Any
 
 import sympy as sp
-from exprtest import zerotest
+from exprtools import zerotest
 
 
 class TruthValue(Enum):

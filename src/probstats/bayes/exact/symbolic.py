@@ -90,13 +90,16 @@ def _validate_normalizer(
     value: sp.Expr,
     *,
     assumptions: Any | None = None,
+    exprtools_loader: Callable[[], Any] | None = None,
     exprtest_loader: Callable[[], Any] | None = None,
     semialg_loader: Callable[[], Any] | None = None,
 ) -> NormalizerValidation:
     """Apply one validity contract to every exact posterior normalizer."""
     if value in (sp.oo, -sp.oo, sp.zoo, sp.nan) or value.has(sp.oo, sp.zoo, sp.nan):
         raise ExactIntegrationError(f"Normalizer is not finite: {value}.")
-    zero = certify_zero(value, exprtest_loader=exprtest_loader)
+    zero = certify_zero(
+        value, exprtools_loader=exprtools_loader, exprtest_loader=exprtest_loader
+    )
     if zero.is_zero is True:
         raise ExactIntegrationError(
             f"Normalizer is zero ({zero.backend}: {zero.reason})."

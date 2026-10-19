@@ -275,6 +275,7 @@ def infer_laplace(
     geometry: Any | None = None,
     corrector: HigherOrderCorrector | None = None,
     order: int = 2,
+    exprtools_loader: Callable[[], Any] | None = None,
     exprtest_loader: Callable[[], Any] | None = None,
     semialg_loader: Callable[[], Any] | None = None,
     funcprops_loader: Callable[[], Any] | None = None,
@@ -336,7 +337,9 @@ def infer_laplace(
     exact_precision = -symbolic_hessian(log_density, target_symbols).subs(point_subs)
     precision_determinant = sp.simplify(exact_determinant(exact_precision))
     determinant_certificate = certify_zero(
-        precision_determinant, exprtest_loader=exprtest_loader
+        precision_determinant,
+        exprtools_loader=exprtools_loader,
+        exprtest_loader=exprtest_loader,
     )
     definiteness_certificate = certify_positive_definite(
         exact_precision,
